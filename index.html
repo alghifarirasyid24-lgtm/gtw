@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Class - Memori Kelas Kita</title>
+    <style>
+        /* --- RESET & BASIC STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #111;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        /* --- NAVBAR (Lobby Tiket) --- */
+        header {
+            background-color: #000;
+            border-bottom: 3px solid #e50914; /* Merah Netflix/Bioskop */
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e50914;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+        }
+
+        .logo span {
+            color: #ffcc00; /* Kuning tiket emas */
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffcc00;
+        }
+
+        /* --- HERO SECTION (Now Showing) --- */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), #111), url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1920') no-repeat center center/cover;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #ccc;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .btn-ticket {
+            background-color: #ffcc00;
+            color: #000;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-ticket:hover {
+            transform: scale(1.05);
+            background-color: #e6b800;
+        }
+
+        /* --- CONTAINER UTAMA --- */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2.section-title {
+            font-size: 28px;
+            color: #ffcc00;
+            border-left: 5px solid #e50914;
+            padding-left: 10px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        /* --- TENTANG KAMI (Sinopsis Film) --- */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .article-card {
+            background-color: #1c1c1c;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
+            border: 1px solid #333;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            border-color: #e50914;
+        }
+
+        .article-img {
+            width: 100%;
+            height: 180px;
+            background-color: #333; /* Placeholder sebelum diganti foto */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        .article-content {
+            padding: 20px;
+        }
+
+        .article-content h3 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .article-content p {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .read-more {
+            color: #e50914;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        /* --- GALERI FOTO (Roll Film Kenangan) --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            background-color: #222;
+            aspect-ratio: 3/4; /* Proporsi poster kami */
+            border-radius: 5px;
+            overflow: hidden;
+            border: 2px solid #333;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+        }
+
+        .gallery-item:hover {
+            border-color: #ffcc00;
+        }
+
+        /* Ini adalah caption saat foto di hover */
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay p {
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #000;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #222;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR (Lobby) -->
+    <header>
+        <div class="logo">CINEMA<span>CLASS</span></div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#artikel">Sinopsis (Artikel)</a>
+            <a href="#galeri">Dokumenter (Galeri)</a>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION (Now Showing) -->
+    <div class="hero" id="home">
+        <h1>Welcome To X.E-4</h1>
+        <p>Gulir ke bawah untuk melihat kisah petualangan, tawa, dan kenangan tak terlupakan yang telah kita filmkan bersama.</p>
+        <button class="btn-ticket" onclick="document.getElementById('artikel').scrollIntoView({behavior: 'smooth'});">Ambil Tiket Masuk</button>
+    </div>
+
+    <!-- CONTAINER UTAMA -->
+    <div class="container">
+
+        <!-- SECTION ARTIKEL -->
+        <section id="artikel">
+            <h2 class="section-title">Sinopsis Kisah (Artikel Kelas)</h2>
+            <div class="article-grid">
+                
+                <!-- Artikel 1 -->
+                <div class="article-card">
+                    <div class="article-img">
+                        <!-- Kamu bisa ganti src dengan link foto kegiatan nanti -->
+                        <p>[ Foto Cover Artikel 1 ]</p>
+                    </div>
+                    <div class="article-content">
+                        <h3>Kisah Di Balik Layar: Awal Dari Semuanya</h3>
+                        <p>Langkah awal mengenal semuanya...</p>
+                        <a href="#" class="read-more">Baca Selengkapnya &raquo;</a>
+                    </div>
+                </div>
+
+                <!-- Artikel 2 -->
+                <div class="article-card">
+                    <div class="article-img">
+                        <p>[ Foto Cover Artikel 2 ]</p>
+                    </div>
+                    <div class="article-content">
+                        <h3>Perjuangan kami di lapangan</h3>
+                        <p>Ketika classmeet dimulai,kami bukan hanya bertarung memperebutkan juara namun kami menaruh harga diri disini...</p>
+                        <a href="#" class="read-more">Baca Selengkapnya &raquo;</a>
+                    </div>
+                </div>
+
+                <!-- Artikel 3 -->
+                <div class="article-card">
+                    <div class="article-img">
+                        <p>[ Foto Cover Artikel 3 ]</p>
+                    </div>
+                    <div class="article-content">
+                        <h3>Keseruan Di Luar Jam Pelajaran</h3>
+                        <p>Momen-momen santai saat jam kosong atau sepulang sekolah. Karena bioskop terbaik adalah tempat di mana kita bisa tertawa lepas...</p>
+                        <a href="#" class="read-more">Baca Selengkapnya &raquo;</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION GALERI FOTO -->
+        <section id="galeri">
+            <h2 class="section-title">Cuplikan Adegan (Foto Kenangan)</h2>
+            <div class="gallery-grid">
+                
+                <!-- Foto 1 -->
+                <div class="gallery-item">
+                    <p>[ Foto Poster 1 ]</p>
+                    <div class="gallery-overlay">
+                        <p>Foto Bersama Wali Kelas</p>
+                    </div>
+                </div>
+
+                <!-- Foto 2 -->
+                <div class="gallery-item">
+                    <p>[ Foto Poster 2 ]</p>
+                    <div class="gallery-overlay">
+                        <p>Momen Upacara Bendera</p>
+                    </div>
+                </div>
+
+                <!-- Foto 3 -->
+                <div class="gallery-item">
+                    <p>[ Foto Poster 3 ]</p>
+                    <div class="gallery-overlay">
+                        <p>Keseruan Saat Istirahat</p>
+                    </div>
+                </div>
+
+                <!-- Foto 4 -->
+                <div class="gallery-item">
+                    <p>[ Foto Poster 4 ]</p>
+                    <div class="gallery-overlay">
+                        <p>Kandidat Ketua Kelas</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Cinema Class. Dibuat dengan kenangan. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
